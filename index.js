@@ -9,42 +9,66 @@ import puppeteer from "puppeteer";
   let srch = "shirts";
 
   // === SHOPCLUES SCRAPER ===
+  //   const page = await browser.newPage();
+  //   await page.goto(`https://www.shopclues.com/search?q=${srch}`, {
+  //     waitUntil: "domcontentloaded",
+  //     timeout: 60000,
+  //   });
+
+  //   await page.waitForSelector("#product_list");
+  //   const productHandles = await page.$$("#product_list .row .column");
+
+  //   for (const product of productHandles) {
+  //     const title = await page.evaluate((el) => {
+  //       const titleEl = el.querySelector("a > h2");
+  //       return titleEl ? titleEl.textContent.trim() : null;
+  //     }, product);
+
+  //     if (title) console.log("[ShopClues] " + title);
+  //   }
+
+  //   // === MYNTRA SCRAPER ===
+  //   const page2 = await browser.newPage();
+  //   await page2.goto(`https://www.myntra.com/shirt?rawQuery=shirt`, {
+  //     waitUntil: "domcontentloaded",
+  //     timeout: 60000,
+  //   });
+
+  //   await page2.waitForSelector(".results-base");
+  //   const productHandles2 = await page2.$$(".results-base .product-base");
+
+  //   for (const product of productHandles2) {
+  //     const title = await page2.evaluate((el) => {
+  //       const titleEl = el.querySelector(".product-product");
+  //       return titleEl ? titleEl.textContent.trim() : null;
+  //     }, product);
+
+  //     if (title) console.log("[Myntra] " + title);
+  //   }
   const page = await browser.newPage();
-  await page.goto(`https://www.shopclues.com/search?q=${srch}`, {
+  await page.goto(`https://www.flipkart.com`, {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
 
-  await page.waitForSelector("#product_list");
-  const productHandles = await page.$$("#product_list .row .column");
+  await page.type('input[name="q"]', "Shirts");
+  //   await page.locator("aria/Search").fill("Shirts");
+  //   await page.locator(".devsite-result-item-link").click();
+  await page.keyboard.press("Enter");
 
-  for (const product of productHandles) {
+  await page.waitForSelector(".DOjaWF .gdgoEp ");
+  const list = await page.$$(".DOjaWF .gdgoEp .cPHDOP ._75nlfW .hCKiGj ");
+  let c = 0;
+
+  for (const product of list) {
     const title = await page.evaluate((el) => {
-      const titleEl = el.querySelector("a > h2");
-      return titleEl ? titleEl.textContent.trim() : null;
+      const title1 = el.querySelector("a");
+      return title1 ? title1.textContent.trim() : null;
     }, product);
-
-    if (title) console.log("[ShopClues] " + title);
+    c++;
+    console.log(title);
   }
-
-  // === MYNTRA SCRAPER ===
-  const page2 = await browser.newPage();
-  await page2.goto(`https://www.myntra.com/shirt?rawQuery=shirt`, {
-    waitUntil: "domcontentloaded",
-    timeout: 60000,
-  });
-
-  await page2.waitForSelector(".results-base");
-  const productHandles2 = await page2.$$(".results-base .product-base");
-
-  for (const product of productHandles2) {
-    const title = await page2.evaluate((el) => {
-      const titleEl = el.querySelector(".product-product");
-      return titleEl ? titleEl.textContent.trim() : null;
-    }, product);
-
-    if (title) console.log("[Myntra] " + title);
-  }
+  console.log("The Count is :", c);
 
   // await browser.close(); // Optional
 })();
