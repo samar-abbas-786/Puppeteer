@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Scraping</title>
+    <script src="index.js" defer></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(to right, #e0eafc, #cfdef3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        padding: 40px 20px;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 30px;
+        color: #1e3a8a;
+        text-align: center;
+      }
+
+      input[type="text"] {
+        padding: 10px 15px;
+        font-size: 1rem;
+        border: 2px solid #2563eb;
+        border-radius: 8px;
+        width: 280px;
+        outline: none;
+        margin-right: 10px;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #2563eb;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #1d4ed8;
+      }
+
+      main {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      #title {
+        font-weight: bold;
+        color: #0f172a;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to Web Scraping</h1>
+    <div>
+      <input id="inp" type="text" placeholder="Enter keyword..." />
+      <button id="btn">Search</button>
+    </div>
+
+    <main>
+      <h2>Title: <span id="title">Waiting for input...</span></h2>
+    </main>
+  </body>
+</html>
