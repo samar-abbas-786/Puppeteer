@@ -1,15 +1,33 @@
-const puppeteer = require("puppeteer");
+import puppeteer from "puppeteer";
 
 (async () => {
-  const browser = await puppeteer.launch(); // launch browser
-  const page = await browser.newPage(); // open new tab
-  await page.goto("https://web.whatsapp.com/"); // go to website
-  await page.click('span[title="💖FAMILY💖💖GROUP💖"]');
-//   await page.type('div[class="lexical-rich-text-input"]', "How are you");
-  //   await page.click('sapn[data-icon="wds-ic-send-filled"]');
-  //title="💖FAMILY💖💖GROUP💖"
+  const browser = await puppeteer.launch({
+    headless: false,
+    defaultViewport: false,
+  });
 
-  //   await page.screenshot({ path: "example.png" }); // take screenshot
+  const page = await browser.newPage();
+  await page.goto(
+    "http://shopclues.com/search?q=shoes&sc_z=&z=1&count=10&user_id=&user_segment=default",
+    {
+      waitUntil: "networkidle2",
+    }
+  );
 
-  await browser.close(); // close browser
+  // Wait for the product list container to appear
+  await page.waitForSelector("#product_list");
+
+  // Select all individual product cards inside the list
+  const productHandles = await page.$$("#product_list .row .column");
+
+  for (const product of productHandles) {
+    const title = await page.evaluate((el) => {
+      const titleEl = el.querySelector("a > h2");
+      return titleEl ? titleEl.textContent.trim() : null;
+    }, product);
+
+    if (title) console.log(title);
+  }
+
+  // await browser.close();
 })();
