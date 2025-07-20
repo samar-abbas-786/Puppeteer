@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import fs from "fs/promises";
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -58,17 +59,42 @@ import puppeteer from "puppeteer";
 
   await page.waitForSelector(".DOjaWF .gdgoEp ");
   const list = await page.$$(".DOjaWF .gdgoEp .cPHDOP ._75nlfW .hCKiGj ");
-  let c = 0;
+  let c = 13009;
+  let d = 0;
+  let i = 1;
+  let p = 1;
+  while (c > 0) {
+    console.log(`------Scraping pagenumber ${p}---------`);
 
-  for (const product of list) {
-    const title = await page.evaluate((el) => {
-      const title1 = el.querySelector("a");
-      return title1 ? title1.textContent.trim() : null;
-    }, product);
-    c++;
-    console.log(title);
+    for (const product of list) {
+      const title = await page.evaluate(async (el) => {
+        const title1 = el.querySelector("div.syl9yP");
+        return title1 ? title1.textContent.trim() : null;
+      }, product);
+      c--;
+      console.log(title);
+
+      if (title) {
+        await fs.appendFile("title.txt", i + ". " + title + "\n", "utf8");
+      }
+      i++;
+
+      d++;
+    }
+    const buttons = await page.$$("._9QVEpD");
+    await page.waitForSelector("._9QVEpD", { visible: true });
+
+    for (const btn of buttons) {
+      const text = await page.evaluate((el) => el.textContent.trim(), btn);
+      if (text === "Next") {
+        await btn.click();
+        break;
+      }
+    }
+
+    p++;
   }
-  console.log("The Count is :", c);
+  console.log("The Count is :", d);
 
   // await browser.close(); // Optional
 })();
