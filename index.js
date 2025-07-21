@@ -57,28 +57,35 @@ import fs from "fs/promises";
   //   await page.locator(".devsite-result-item-link").click();
   await page.keyboard.press("Enter");
 
-  await page.waitForSelector(".DOjaWF .gdgoEp ");
-  const list = await page.$$(".DOjaWF .gdgoEp .cPHDOP ._75nlfW .hCKiGj ");
-  let c = 13009;
+  let c = 12000;
   let d = 0;
   let i = 1;
   let p = 1;
-  while (c > 0) {
+  const results = [];
+  while (true) {
     console.log(`------Scraping pagenumber ${p}---------`);
+    await page.waitForSelector(".DOjaWF .gdgoEp ");
+    const list = await page.$$(".DOjaWF .gdgoEp .cPHDOP ._75nlfW"); //.hCKiGj
 
     for (const product of list) {
-      const title = await page.evaluate(async (el) => {
-        const title1 = el.querySelector("div.syl9yP");
-        return title1 ? title1.textContent.trim() : null;
+      if (c <= 0) break;
+
+      const title = await page.evaluate((el) => {
+        const titleEl = el.querySelector(".hCKiGj > .syl9yP");
+        const imgEl = el.querySelector("img._53J4C-");
+        const priceEl = el.querySelector("div.Nx9bqj");
+
+        const titleText = titleEl ? titleEl.textContent.trim() : "N/A";
+        const imageSrc = imgEl ? imgEl.src : "N/A";
+        const price = priceEl ? priceEl.textContent.trim() : "N/A";
+
+        return { titleText, imageSrc, price };
       }, product);
       c--;
+      results.push(title);
       console.log(title);
 
-      if (title) {
-        await fs.appendFile("title.txt", i + ". " + title + "\n", "utf8");
-      }
       i++;
-
       d++;
     }
     const buttons = await page.$$("._9QVEpD");
@@ -86,6 +93,7 @@ import fs from "fs/promises";
 
     for (const btn of buttons) {
       const text = await page.evaluate((el) => el.textContent.trim(), btn);
+
       if (text === "Next") {
         await btn.click();
         break;
@@ -94,6 +102,8 @@ import fs from "fs/promises";
 
     p++;
   }
+  await fs.writeFile("data.json", JSON.stringify(results, null, 2), "utf8");
+
   console.log("The Count is :", d);
 
   // await browser.close(); // Optional

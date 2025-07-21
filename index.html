@@ -3,83 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web Scraping</title>
-    <script src="index.js" defer></script>
+    <title>Show Scraped Data</title>
     <style>
-      * {
-        box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      body {
-        background: linear-gradient(to right, #e0eafc, #cfdef3);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        min-height: 100vh;
-        padding: 40px 20px;
-        margin: 0;
-      }
-
-      h1 {
-        font-size: 2.5rem;
-        margin-bottom: 30px;
-        color: #1e3a8a;
-        text-align: center;
-      }
-
-      input[type="text"] {
-        padding: 10px 15px;
-        font-size: 1rem;
-        border: 2px solid #2563eb;
+      .product {
+        border: 1px solid #ccc;
         border-radius: 8px;
-        width: 280px;
-        outline: none;
-        margin-right: 10px;
-      }
-
-      button {
-        padding: 10px 20px;
-        background-color: #2563eb;
-        color: white;
-        font-size: 1rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      button:hover {
-        background-color: #1d4ed8;
-      }
-
-      main {
-        margin-top: 40px;
-        padding: 20px;
-        background-color: #ffffff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        width: 80%;
-        max-width: 600px;
+        padding: 10px;
+        margin: 10px;
+        width: 200px;
         text-align: center;
+        display: inline-block;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
       }
-
-      #title {
-        font-weight: bold;
-        color: #0f172a;
+      .product img {
+        width: 100%;
+        height: auto;
       }
     </style>
   </head>
   <body>
-    <h1>Welcome to Web Scraping</h1>
-    <div>
-      <input id="inp" type="text" placeholder="Enter keyword..." />
-      <button id="btn">Search</button>
-    </div>
+    <h1>Scraped Products</h1>
+    <div id="products"></div>
 
-    <main>
-      <h2>Title: <span id="title">Waiting for input...</span></h2>
-    </main>
+    <script>
+      const getData = async () => {
+        const res = await fetch("data.json"); // fetch JSON file
+        const data = await res.json(); // parse JSON data
+
+        const container = document.getElementById("products");
+
+        data.forEach((item, index) => {
+          const productDiv = document.createElement("div");
+          productDiv.className = "product";
+          productDiv.innerHTML = `
+            <img src="${item.imageSrc}" alt="${item.titleText}" />
+            <h3>${index}-${item.titleText}</h3>
+            <p><strong>Price:</strong> ${item.price}</p>
+          `;
+          container.appendChild(productDiv);
+        });
+      };
+
+      getData(); // call the function
+    </script>
   </body>
 </html>
